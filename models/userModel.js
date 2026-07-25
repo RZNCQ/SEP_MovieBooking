@@ -100,10 +100,10 @@ async function updateUser(id, userData) {
   try {
     connection = await sql.connect(dbconfig);
     const query =
-      "UPDATE Users SET Name = @name, Email = @email WHERE UserId = @id;";
+      "UPDATE Users SET Name = @name, PasswordHash = ISNULL(@passwordHash,PasswordHash) WHERE UserId = @id;";
     const request = connection.request();
     request.input("name", userData.name);
-    request.input("email", userData.email);
+    request.input("passwordHash", userData.passwordHash);
     request.input("id", id);
     const result = await request.query(query);
     return result.rowsAffected[0];

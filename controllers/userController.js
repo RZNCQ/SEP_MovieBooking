@@ -25,31 +25,31 @@ async function getUserById(req, res) {
   }
 }
 
-async function registerUser(req, res) { 
-  const { name, email, password, role } = req.body; 
+async function registerUser(req, res) {
+  const { name, email, password, role } = req.body;
 
   try {
-    const existingUser = await userModel.getUserByEmail(email); 
-    if (existingUser) { 
-      return res.status(400).json({ message: "email already exists" }); 
+    const existingUser = await userModel.getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: "email already exists" });
     }
-    const salt = await bcrypt.genSalt(10); 
-    const hashedPassword = await bcrypt.hash(password, salt); 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    const userData = { 
-      name: name, 
-      email: email, 
-      passwordHash: hashedPassword, 
+    const userData = {
+      name: name,
+      email: email,
+      passwordHash: hashedPassword,
       role: role,
     };
-    const newUser = await userModel.createUser(userData); 
-    return res.status(201).json({ message: "User created successfully", 
-                                  data: newUser, 
-                                }); 
-  } catch (err) { 
-    console.error(err); 
-    return res.status(500).json({ message: "Internal server error" }); 
-  } 
+    const newUser = await userModel.createUser(userData);
+    return res
+      .status(201)
+      .json({ message: "User created successfully", data: newUser });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 async function createUser(req, res) {
@@ -65,7 +65,17 @@ async function createUser(req, res) {
 async function updateUser(req, res) {
   try {
     const id = parseInt(req.params.id);
-    const result = await userModel.updateUser(id, req.body);
+    const { name, password } = req.body; 
+    let hashedPassword = null;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+    }
+    const userData = {
+      name: name,
+      passwordHash: hashedPassword,
+    };
+    const result = await userModel.updateUser(id, userData);
     if (result === 0) {
       return res.status(404).send("user not found");
     }
@@ -104,4 +114,3 @@ module.exports = {
   deleteUser,
   registerUser,
 };
-
