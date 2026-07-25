@@ -23,7 +23,7 @@ async function getUserById(id) {
   let connection;
   try {
     connection = await sql.connect(dbconfig);
-    const query = "SELECT UserId, Name, Email, Contact, Role FROM Users WHERE UserId = @id";
+    const query = "SELECT UserId, Name, Email, Role FROM Users WHERE UserId = @id";
     const request = connection.request();
     request.input("id", id);
     const result = await request.query(query);
