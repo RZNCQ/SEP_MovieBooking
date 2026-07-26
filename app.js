@@ -15,6 +15,8 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static(path.join(__dirname,"public")));
+
 //Only Admin Can Access
 //Users
 app.get("/users", verifyJWT, authorizedRoles("Admin"),userController.getAllUsers);

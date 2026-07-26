@@ -22,11 +22,11 @@
 
         <div id="register" class="hidden">
             <h3 class="text-2xl font-bold text-center mb-6">Account Registration</h3>
-            <input type="text" placeholder="Name" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
-            <input type="email" placeholder="Email" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
-            <input type="password" placeholder="Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
-            <input type="password" placeholder="Confirm Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
-            <button class="w-full bg-cyan-700 text-white py-2 rounded-xl hover:bg-cyan-500">Login</button>
+            <input id="registerName" type="text" placeholder="Name" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
+            <input id="registerEmail" type="email" placeholder="Email" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
+            <input id="registerPassword" type="password" placeholder="Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
+            <input id="registerConfirm" type="password" placeholder="Confirm Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
+            <button id="submitRegister" class="w-full bg-cyan-700 text-white py-2 rounded-xl hover:bg-cyan-500">Register</button>
         </div>
 
     </div>
@@ -50,6 +50,39 @@
             loginBtn.classList.remove("bg-cyan-700","text-white");
             registerBtn.classList.add("bg-cyan-700","text-white");
         });
+
+        document.getElementById("submitRegister").addEventListener("click",async()=>{
+            const name = document.getElementById("registerName").value;
+            const email = document.getElementById("registerEmail").value;
+            const password = document.getElementById("registerPassword").value;
+            const confirmPassword = document.getElementById("registerConfirm").value;
+
+            if(password !==confirmPassword){
+                return alert("Password Not Match!");
+            }
+
+            try{
+                const res = await fetch('/users/register',{
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({name: name, email: email, password: password, role:"Customer"})
+                });
+                const data = await res.json();
+                if(res.ok){
+                    alert("Registration succussful!");
+                    document.getElementById('registerName').value = '';
+                    document.getElementById('registerEmail').value = '';
+                    document.getElementById('registerPassword').value = '';
+                    document.getElementById('registerConfirm').value = '';
+                    document.getElementById('loginBtn').click();
+                }else{
+                    alert(data.message || "failed to register.");
+                }
+
+            }catch(error){
+                alert("Registration failed.")
+            }
+        })
 
     </script>
     <script src="account.js"></script>
