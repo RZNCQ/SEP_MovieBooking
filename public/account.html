@@ -13,14 +13,14 @@
             <button id="registerBtn" class="bg-silver-600 w-1/2 py-2 text-black border-2 border-black font-bold rounded-r-xl">Register</button>
         </div>
 
-        <div id="login" class="hidden">
+        <div id="login">
             <h3 class="text-2xl font-bold text-center mb-6">Welcome back!</h3>
             <input type="email" placeholder="Email" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
             <input type="password" placeholder="Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
             <button class="w-full bg-cyan-700 text-white py-2 rounded-xl hover:bg-cyan-500">Login</button>
         </div>
 
-        <div id="register">
+        <div id="register" class="hidden">
             <h3 class="text-2xl font-bold text-center mb-6">Account Registration</h3>
             <input type="text" placeholder="Name" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
             <input type="email" placeholder="Email" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
@@ -33,6 +33,23 @@
     <script>
         const loginBtn = document.getElementById("loginBtn");
         const registerBtn = document.getElementById("registerBtn");
+        const loginForm = document.getElementById("login");
+        const registerForm = document.getElementById("register");
+
+        loginBtn.addEventListener("click", ()=>{
+            registerForm.classList.add("hidden");
+            loginForm.classList.remove("hidden");
+            registerBtn.classList.remove("bg-cyan-700","text-white");
+            loginBtn.classList.add("bg-cyan-700","text-white");
+
+        });
+
+        registerBtn.addEventListener("click", ()=>{
+            registerForm.classList.remove("hidden");
+            loginForm.classList.add("hidden");
+            loginBtn.classList.remove("bg-cyan-700","text-white");
+            registerBtn.classList.add("bg-cyan-700","text-white");
+        });
 
     </script>
     <script src="account.js"></script>
