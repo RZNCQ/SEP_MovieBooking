@@ -53,12 +53,29 @@ async function registerUser(req, res) {
 }
 
 async function createUser(req, res) {
+  const { name, email, password, role } = req.body;
+
   try {
-    const newUser = await userModel.createUser(req.body);
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.log("Controller error: ", error);
-    res.status(500).json({ error: "Error creating user" });
+    const existingUser = await userModel.getUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ message: "email already exists" });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const userData = {
+      name: name,
+      email: email,
+      passwordHash: hashedPassword,
+      role: role,
+    };
+    const newUser = await userModel.createUser(userData);
+    return res
+      .status(201)
+      .json({ message: "User created successfully", data: newUser });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 

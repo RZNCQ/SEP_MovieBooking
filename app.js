@@ -8,20 +8,27 @@ const app = express();
 const userController = require("./controllers/userController");
 const { validateUser, validateUserId } = require("./middlewares/userValidation");
 const authController = require("./controllers/authController");
-
+const {verifyJWT, authorizedRoles} = require("./middlewares/authorizeUser")
 
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/users", userController.getAllUsers);
-app.get("/users/:id", validateUserId, userController.getUserById);
-app.post("/users", validateUser, userController.createUser); 
-app.post("/users/register", validateUser,userController.registerUser);
-app.put("/users/:id",validateUserId ,userController.updateUser);
-app.delete("/users/:id", validateUserId, userController.deleteUser);
+//Only Admin Can Access
+//Users
+app.get("/users", verifyJWT, authorizedRoles("Admin"),userController.getAllUsers);
+app.post("/users", verifyJWT, authorizedRoles("Admin"),validateUser, userController.createUser);
 
+//Customer And Admin Can Access
+//Users
+app.get("/users/:id", verifyJWT, authorizedRoles("Admin","Customer"),validateUserId, userController.getUserById);
+app.put("/users/:id",verifyJWT, authorizedRoles("Admin","Customer"),validateUserId ,userController.updateUser);
+app.delete("/users/:id", verifyJWT, authorizedRoles("Admin","Customer"),validateUserId, userController.deleteUser);
+
+//Public Access
+//Register
+app.post("/users/register", validateUser,userController.registerUser);
 //Login
 app.post("/login", authController.login);
 
