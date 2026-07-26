@@ -7,6 +7,7 @@ const app = express();
 
 const userController = require("./controllers/userController");
 const { validateUser, validateUserId } = require("./middlewares/userValidation");
+const authController = require("./controllers/authController");
 
 
 const port = process.env.PORT || 3000;
@@ -21,6 +22,8 @@ app.post("/users/register", validateUser,userController.registerUser);
 app.put("/users/:id",validateUserId ,userController.updateUser);
 app.delete("/users/:id", validateUserId, userController.deleteUser);
 
+//Login
+app.post("/login", authController.login);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
