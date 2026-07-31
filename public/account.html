@@ -15,9 +15,9 @@
 
         <div id="login">
             <h3 class="text-2xl font-bold text-center mb-6">Welcome back!</h3>
-            <input type="email" placeholder="Email" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
-            <input type="password" placeholder="Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
-            <button class="w-full bg-cyan-700 text-white py-2 rounded-xl hover:bg-cyan-500">Login</button>
+            <input id="loginEmail" type="email" placeholder="Email" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
+            <input id="loginPassword" type="password" placeholder="Password" class="w-full py-2 border border-gray-500 rounded-lg px-3 mb-5">
+            <button id="submitLogin" class="w-full bg-cyan-700 text-white py-2 rounded-xl hover:bg-cyan-500">Login</button>
         </div>
 
         <div id="register" class="hidden">
@@ -50,7 +50,8 @@
             loginBtn.classList.remove("bg-cyan-700","text-white");
             registerBtn.classList.add("bg-cyan-700","text-white");
         });
-
+        
+        //Register Submit Button
         document.getElementById("submitRegister").addEventListener("click",async()=>{
             const name = document.getElementById("registerName").value;
             const email = document.getElementById("registerEmail").value;
@@ -76,11 +77,35 @@
                     document.getElementById('registerConfirm').value = '';
                     document.getElementById('loginBtn').click();
                 }else{
-                    alert(data.message || "failed to register.");
+                    alert(data.message);
                 }
 
             }catch(error){
                 alert("Registration failed.")
+            }
+        })
+
+        //Login Submit Button
+        document.getElementById("submitLogin").addEventListener('click',async()=>{
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            try{
+                const res = await fetch('/login',{
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({email:email,password:password})
+                });
+                const data = await res.json();
+                if(res.ok){
+                    alert('Successfully Login');
+                    document.getElementById('loginPassword').value='';
+                    document.getElementById('loginEmail').value='';
+                    window.location.href='/index.html'
+                }else{
+                alert(data.message);
+                }
+            }catch(error){
+                alert("Server Down Try Again Later.");
             }
         })
 
