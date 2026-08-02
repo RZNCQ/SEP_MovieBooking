@@ -27,10 +27,10 @@ const movieSchema = Joi.object({
     "string.max": "Genre cannot exceed 40 characters",
     "any.required": "Genre is required",
   }),
-  rating: Joi.string().min(2).max(10).required().messages({
+  rating: Joi.string().min(1).max(10).required().messages({
     "string.base": "Rating must be a string",
     "string.empty": "Rating cannot be empty",
-    "string.min": "Title must be at least 2 character long",
+    "string.min": "Title must be at least 1 character long",
     "string.max": "Rating cannot exceed 10 characters",
     "any.required": "Rating is required",
   }),
