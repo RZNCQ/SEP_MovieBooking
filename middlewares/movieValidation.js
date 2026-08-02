@@ -1,7 +1,7 @@
-const joi = require("joi");
+const Joi = require("joi");
 
-const movieSchema = joi.object({
-  title: Joi.string().min(1).max(99).required().message({
+const movieSchema = Joi.object({
+  title: Joi.string().min(1).max(99).required().messages({
     "string.base": "Title must be a string",
     "string.empty": "Title cannot be empty",
     "string.min": "Title must be at least 1 character long",
