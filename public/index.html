@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome To PopcornCine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900 text-white m-0 min-h-screen">
+    <header class="bg-gray-800 border-b border-gray-700 p-5 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-green-500">PopcornCine</h1>
+      <nav>
+        <a href="index.html" class="text-gray-300 font-semibold hover:text-white ml-6">Home</a>
+        <a href="account.html"class="text-gray-300 font-semibold hover:text-white ml-6">Login/Register</a>
+      </nav>
+    </header>
+    <main class="p-8">
+      <div id="movieGrid"class="grid grid-cols-1 md:grid-cols-4 gap-6"></div>
+    </main>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const res = await fetch("/movies", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          });
+          const data = await res.json();
+          if (res.ok) {
+            const grid = document.getElementById("movieGrid");
+            grid.innerHTML = "";
+            data.forEach((movie) => {
+              const card = document.createElement("div");
+              card.className = "bg-gray-800 border border-gray-700 rounded-lg";
+                card.innerHTML = `
+                  <img src="${movie.ImageURL}" alt="${movie.Title}" class="w-full h-90 object-cover">
+                  <div class="p-5 flex flex-col flex-grow">
+                    <h2 class="text-xl font-bold text-white mb-2 line-clamp-1">${movie.Title}</h2>
+                    <p class="text-sm text-gray-400 mb-1">${movie.Genre}</p>
+                    <p class="text-sm text-gray-400 mb-1">${movie.Duration} mins</p>
+                    <p class="text-sm font-semibold text-green-400 mb-4">Rating: ${movie.Rating}</p>         
+                    <button onclick="window.location.href='movie.html?id=${movie.MovieID}'" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2">
+                      Book Ticket
+                    </button>
+                  </div>
+                `;
+              grid.appendChild(card);
+            });
+          } else {
+            alert(data.error || "Failed to load movies.");
+          }
+        } catch (error) {
+          alert("Server connection failed.");
+          document.getElementById("movieGrid").innerHTML = `<p class="text-red-500 font-bold">Error Fetching Movies</p>`;}
+      });
+    </script>
+  </body>
+</html>
