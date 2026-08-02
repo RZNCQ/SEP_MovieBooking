@@ -27,13 +27,13 @@ app.get("/users", verifyJWT, authorizedRoles("Admin"),userController.getAllUsers
 app.post("/users", verifyJWT, authorizedRoles("Admin"),validateUser, userController.createUser);
 //Movies
 app.post("/movies",verifyJWT,authorizedRoles("Admin"),validateMovie,movieController.createMovie);
-app.put("/movies/:id",verifyJWT,authorizedRoles("Admin"),validateMovieId,movieController.updateMovie);
+app.put("/movies/:id",verifyJWT,authorizedRoles("Admin"),validateMovieId, validateMovie, movieController.updateMovie);
 app.delete("/movies/:id",verifyJWT,authorizedRoles("Admin"),validateMovieId,movieController.deleteMovie);
 
 //Customer And Admin Can Access
 //Users
 app.get("/users/:id", verifyJWT, authorizedRoles("Admin","Customer"),validateUserId, userController.getUserById);
-app.put("/users/:id",verifyJWT, authorizedRoles("Admin","Customer"),validateUserId ,userController.updateUser);
+app.put("/users/:id",verifyJWT, authorizedRoles("Admin","Customer"),validateUserId,validateUser ,userController.updateUser);
 app.delete("/users/:id", verifyJWT, authorizedRoles("Admin","Customer"),validateUserId, userController.deleteUser);
 
 //Public Access
