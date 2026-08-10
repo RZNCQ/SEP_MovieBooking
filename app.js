@@ -14,6 +14,10 @@ const {verifyJWT, authorizedRoles} = require("./middlewares/authorizeUser");
 const movieController = require("./controllers/movieController");
 const {validateMovie,validateMovieId} = require("./middlewares/movieValidation");
 
+//Showtime controller and middleware
+const showtimeController = require("./controllers/showtimeController");
+const {validateShowtime} = require("./middlewares/showtimeValidation");
+
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
@@ -29,6 +33,10 @@ app.post("/users", verifyJWT, authorizedRoles("Admin"),validateUser, userControl
 app.post("/movies",verifyJWT,authorizedRoles("Admin"),validateMovie,movieController.createMovie);
 app.put("/movies/:id",verifyJWT,authorizedRoles("Admin"),validateMovieId, validateMovie, movieController.updateMovie);
 app.delete("/movies/:id",verifyJWT,authorizedRoles("Admin"),validateMovieId,movieController.deleteMovie);
+//showtimes
+app.post("/showtimes",verifyJWT,authorizedRoles("Admin"),validateShowtime,showtimeController.createShowtime);
+app.put("/showtimes/:id", verifyJWT, authorizedRoles("Admin"), validateShowtime, showtimeController.updateShowtime);
+app.delete("/showtimes/:id", verifyJWT, authorizedRoles("Admin"), showtimeController.deleteShowtime);
 
 //Customer And Admin Can Access
 //Users
@@ -37,8 +45,13 @@ app.put("/users/:id",verifyJWT, authorizedRoles("Admin","Customer"),validateUser
 app.delete("/users/:id", verifyJWT, authorizedRoles("Admin","Customer"),validateUserId, userController.deleteUser);
 
 //Public Access
+//Movies
 app.get("/movies",movieController.getAllMovies);
 app.get("/movies/:id",validateMovieId, movieController.getMovieById);
+//Showrtime
+app.get("/showtimes", showtimeController.getAllShowtimes);
+app.get("/showtimes/:id", showtimeController.getShowtimeById);
+app.get("/showtimes/movie/:movieId", showtimeController.getShowtimesByMovieId);
 //Register
 app.post("/users/register", validateUser,userController.registerUser);
 //Login
