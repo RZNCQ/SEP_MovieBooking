@@ -60,9 +60,21 @@
             const stContainer = document.getElementById("showtimeContainer");
             stContainer.innerHTML = `<h3 class="text-xl font-bold text-white mb-3">Select Showtime</h3><div>`;     
             showtimes.forEach(st => {
-              stContainer.innerHTML += `<button class="bg-gray-700 hover:bg-green-500 text-white py-2 px-4 m-4">${st.ShowDate.split("T")[0]} | ${st.StartTime.split("T")[1].substring(0, 5)} | ${st.Screen}</button>`;
+              stContainer.innerHTML += `<button id="stBtn_${st.ShowtimeID}" class="stBtn bg-gray-700 hover:bg-green-500 text-white py-2 px-4 m-4">${st.ShowDate.split("T")[0]} | ${st.StartTime.split("T")[1].substring(0, 5)} | ${st.Screen}</button>`;
             });     
-            stContainer.innerHTML+= `</div>`
+            stContainer.innerHTML+= `</div>`;
+            const button = document.querySelectorAll(".stBtn");
+            button.forEach(btn=> {
+              btn.addEventListener('click', function() {
+                button.forEach(b => {
+                  b.classList.remove('bg-green-500');
+                  b.classList.add('bg-gray-700');
+                });
+                this.classList.remove('bg-gray-700');
+                this.classList.add('bg-green-500');
+                window.selectedShowtimeId = this.id.split('_')[1];
+              });
+            })
           } else {
             document.getElementById("showtimeContainer").innerHTML = `<p class="text-red-400">No showtimes available.</p>`;
           }
