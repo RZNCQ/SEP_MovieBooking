@@ -108,6 +108,29 @@ async function createBooking(userId, bookingData) {
   }
 }
 
+async function updateBooking(id, bookingData) {
+  let connection;
+  try {
+    connection = await sql.connect(dbconfig);
+    const query =
+      "UPDATE Bookings SET showtimeID = @showtimeId, quantity = @quantity, totalAmount = @totalAmount WHERE BookingID = @id;";
+    const request = connection.request();
+    request.input("showtimeId", bookingData.showtimeId);
+    request.input("quantity", bookingData.quantity);
+    request.input("totalAmount", bookingData.totalAmount);
+    request.input("id", id);
+    const result = await request.query(query);
+    return result.rowsAffected[0];
+  } catch (error) {
+    console.error("Database error:", error);
+    throw error;
+  } finally {
+    if (connection) {
+      await connection.close().catch((err) => console.error("Error closing connection:", err));
+    }
+  }
+}
+
 async function deleteBooking(id) {
   let connection;
   try {
@@ -132,5 +155,6 @@ module.exports = {
   getBookingById,
   getBookingsByUserId,
   createBooking,
-  deleteBooking
+  deleteBooking,
+  updateBooking
 };

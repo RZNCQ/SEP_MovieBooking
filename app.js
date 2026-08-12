@@ -54,6 +54,7 @@ app.delete("/users/:id", verifyJWT, authorizedRoles("Admin","Customer"),validate
 //Bookings
 app.get("/bookings/user/:userId",verifyJWT, authorizedRoles("Admin","Customer"),bookingController.getBookingsByUserId);
 app.post("/bookings",verifyJWT, validateBooking, authorizedRoles("Admin","Customer"),bookingController.createBooking);
+app.put("/bookings/:id", verifyJWT, authorizedRoles("Admin", "Customer"), validateBooking, bookingController.updateBooking);
 
 //Public Access
 //Movies

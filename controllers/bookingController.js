@@ -55,6 +55,24 @@ async function createBooking(req, res) {
   }
 }
 
+async function updateBooking(req, res) {
+  try {
+    const id = parseInt(req.params.id);
+    const result = await bookingModel.updateBooking(id, req.body);
+    if (result === 0) {
+      return res.status(404).send("Booking not found");
+    }
+    const updatedBooking = await bookingModel.getBookingById(id);
+    res.json({
+      message: `Booking with id ${id} updated successfully.`,
+      data: updatedBooking,
+    });
+  } catch (error) {
+    console.error("Error Updating Booking:", error);
+    res.status(500).json({ error: "Error updating booking" });
+  }
+}
+
 async function deleteBooking(req, res) {
   try {
     const id = parseInt(req.params.id);
@@ -75,4 +93,5 @@ module.exports = {
   getBookingsByUserId,
   createBooking,
   deleteBooking,
+  updateBooking
 };
