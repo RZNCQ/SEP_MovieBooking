@@ -11,7 +11,7 @@
       <h1 class="text-2xl font-bold text-green-500">PopcornCine</h1>
       <nav>
         <a href="index.html" class="text-gray-300 font-semibold hover:text-white ml-6">Home</a>
-        <a href="account.html"class="text-gray-300 font-semibold hover:text-white ml-6">Login/Register</a>
+        <a href="account.html"id="authCheck" class="text-gray-300 font-semibold hover:text-white ml-6">Login/Register</a>
       </nav>
     </header>
     <main class="p-8">
@@ -19,6 +19,18 @@
     </main>
 
     <script>
+      const authCheck = document.getElementById("authCheck");
+      const userToken = localStorage.getItem("token");
+      if (userToken) {
+        authCheck.innerText = "Logout";
+        authCheck.href = "#";
+        authCheck.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("token");
+          alert("You have been logged out.");
+          window.location.reload();
+        });
+      }
       document.addEventListener("DOMContentLoaded", async () => {
         try {
           const res = await fetch("/movies", {
@@ -32,18 +44,18 @@
             data.forEach((movie) => {
               const card = document.createElement("div");
               card.className = "bg-gray-800 border border-gray-700 rounded-lg overflow-hidden flex flex-col";
-                card.innerHTML = `
-                  <img src="${movie.ImageURL}" alt="${movie.Title}" class="w-full h-80 object-cover">
-                  <div class="p-5 flex flex-col flex-grow">
-                    <h2 class="text-xl font-bold text-white mb-2 line-clamp-1">${movie.Title}</h2>
-                    <p class="text-sm text-gray-400 mb-1 whitespace-normal break-words">${movie.Genre}</p>
-                    <p class="text-sm text-gray-400 mb-1">${movie.Duration} mins</p>
-                    <p class="text-sm font-semibold text-green-400 mb-4">Rating: ${movie.Rating}</p>         
-                    <button onclick="window.location.href='movie.html?id=${movie.MovieID}'" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 mt-auto">
-                      Book Ticket
-                    </button>
-                  </div>
-                `;
+              card.innerHTML = `
+              <img src="${movie.ImageURL}" alt="${movie.Title}" class="w-full h-80 object-cover">
+              <div class="p-5 flex flex-col flex-grow">
+                <h2 class="text-xl font-bold text-white mb-2 line-clamp-1">${movie.Title}</h2>
+                <p class="text-sm text-gray-400 mb-1 whitespace-normal break-words">${movie.Genre}</p>
+                <p class="text-sm text-gray-400 mb-1">${movie.Duration} mins</p>
+                <p class="text-sm font-semibold text-green-400 mb-4">Rating: ${movie.Rating}</p>         
+                <button onclick="window.location.href='movie.html?id=${movie.MovieID}'" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 mt-auto">
+                  Book Ticket
+                </button>
+              </div>
+            `;
               grid.appendChild(card);
             });
           } else {
@@ -51,7 +63,8 @@
           }
         } catch (error) {
           alert("Server connection failed.");
-          document.getElementById("movieGrid").innerHTML = `<p class="text-red-500 font-bold">Error Fetching Movies</p>`;}
+          document.getElementById("movieGrid").innerHTML = `<p class="text-red-500 font-bold">Error Fetching Movies</p>`;
+        }
       });
     </script>
   </body>
