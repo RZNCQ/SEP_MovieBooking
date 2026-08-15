@@ -86,8 +86,6 @@ In addition, you may also use this section to discuss plans for additional featu
 15. DELETE /booking/:id DELETE specific booking id.
 16. DELETE /movies/:id DELETE specific movie id.
 
-
-
 ## Credits
 
 ### Media
@@ -96,5 +94,5 @@ In addition, you may also use this section to discuss plans for additional featu
 
 ### Links
 
-GitHub Repository: [Insert GitHub Repo Link Here]
+GitHub Repository: https://github.com/RZNCQ/SEP_MovieBooking.
 
